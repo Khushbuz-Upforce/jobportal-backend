@@ -1,4 +1,6 @@
 const Application = require("../Models/ApplicationModel");
+const NotificationModel = require("../Models/NotificationModel.js");
+const Job = require("../Models/RecruiterJob.js");
 
 const getApplications = async (req, res) => {
     try {
@@ -35,9 +37,18 @@ const applyToJob = async (req, res) => {
         const { applicantName, email, phone, coverLetter, jobId } = req.body;
         const resumeUrl = req.file?.path;
         const userId = req.user?.id;
-        // console.log(req.body, "aplication");
-        // console.log(resumeUrl, "resumeUrl");
 
+        // Check if user has already applied to this job
+        const existingApplication = await Application.findOne({ userId, jobId });
+
+        if (existingApplication) {
+
+            // console.log("You have already applied for this job.");
+
+            return res.status(400).json({ message: "You have already applied for this job." });
+        }
+
+        // Create new application
         const newApplication = new Application({
             applicantName,
             email,
@@ -49,7 +60,24 @@ const applyToJob = async (req, res) => {
         });
 
         await newApplication.save();
+
+        const job = await Job.findById(jobId);
+        const jobTitle = job?.title || "a job";
+
+        //  Create and save notification
+        const notification = new NotificationModel({
+            message: `${applicantName} applied for "${jobTitle}"`,
+            type: "application",
+        });
+        await notification.save();
+
+        //  Emit real-time notification
+        if (req.app.get("io")) {
+            req.app.get("io").emit("new_notification", notification);
+        }
+
         res.status(201).json({ message: "Application submitted successfully" });
+
     } catch (err) {
         console.error("Error applying to job:", err);
         res.status(500).json({ message: "Something went wrong" });
