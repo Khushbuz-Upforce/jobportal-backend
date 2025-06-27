@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verifyToken, isAdmin } = require("../Middleware/Auth");
-const { getAllJobs, updateJob, deleteJob, getAllCompanies, updateCompany, createJob, createCompany, getApplications, creatApplication, getDashboard, getNotigication, clearNotifications } = require("../Controllers/AdminController");
+const { getAllJobs, updateJob, deleteJob, getAllCompanies, updateCompany, createJob, createCompany, getApplications, creatApplication, getDashboard, getNotigication, clearNotifications, getJobCategories, getCompanyIndustry } = require("../Controllers/AdminController");
 const multer = require("multer");
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../Config/cloudinary');
@@ -19,8 +19,6 @@ const jobImageStorage = new CloudinaryStorage({
     },
 });
 const uploadJobImage = multer({ storage: jobImageStorage });
-
-
 
 const companyLogoStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
@@ -102,5 +100,11 @@ router.post("/createApplications", verifyToken, isAdmin, creatApplication)
 router.get('/dashboardCount', verifyToken, isAdmin, getDashboard)
 router.get('/getNotigication', verifyToken, isAdmin, getNotigication)
 router.delete('/clear', clearNotifications);
+
+// job catrgory
+
+router.get("/job-categories", getJobCategories); // ✅ Add this
+router.get("/job-industry", getCompanyIndustry); // ✅ Add this
+
 
 module.exports = router;

@@ -20,19 +20,10 @@ const clearNotifications = async (req, res) => {
         res.status(500).json({ message: "Error clearing notifications" });
     }
 };
-// const createJob = async (req, res) => {
-//     try {
-//         const jobData = req.body;
 
-//         const newJob = new Job(jobData);
-//         await newJob.save();
+// Jobs  
 
-//         res.status(201).json(newJob);
-//     } catch (error) {
-//         console.error("Error creating job:", error);
-//         res.status(500).json({ message: "Error creating job", error });
-//     }
-// };
+
 const createJob = async (req, res) => {
     try {
         const {
@@ -185,14 +176,8 @@ const getAllCompanies = async (req, res) => {
         res.status(500).json({ message: "Error fetching companies", error });
     }
 };
-// const updateCompany = async (req, res) => {
-//     try {
-//         const company = await Company.findByIdAndUpdate(req.params.id, req.body, { new: true });
-//         res.json(company);
-//     } catch (error) {
-//         res.status(500).json({ message: "Error updating company", error });
-//     }
-// };
+
+
 const updateCompany = async (req, res) => {
     try {
         const updateData = req.body;
@@ -205,6 +190,8 @@ const updateCompany = async (req, res) => {
         return res.status(500).json({ message: "Error updating company", error });
     }
 };
+
+// Applications
 
 const getApplications = async (req, res) => {
     try {
@@ -243,21 +230,6 @@ const getApplications = async (req, res) => {
         res.status(500).json({ message: "Error fetching applications" });
     }
 };
-// const creatApplication = async (req, res) => {
-//     try {
-//         // console.log(req.body, "Aplication create");
-
-//         const newApp = new Application(req.body);
-//         await newApp.save();
-//         res.status(201).json(newApp);
-//     } catch (err) {
-//         res.status(500).json({ message: "Error creating application" });
-//     }
-// };
-
-// routes/admin.js
-
-
 
 const creatApplication = async (req, res) => {
     try {
@@ -305,6 +277,7 @@ const creatApplication = async (req, res) => {
     }
 };
 
+// Dashboard
 const getDashboard = async (req, res) => {
     try {
         const [userCount, adminCount, companyCount, jobsCount, applicationsCount] = await Promise.all([
@@ -328,7 +301,29 @@ const getDashboard = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch dashboard stats" });
     }
 };
+//  get Job category
+const getCompanyIndustry = async (req, res) => {
+    try {
+        const industry = await Company.distinct("industry");
+        console.log(industry, "job cat");
 
+        res.status(200).json({ industry });
+    } catch (error) {
+        console.error("Error fetching job categories:", error);
+        res.status(500).json({ message: "Failed to fetch categories" });
+    }
+};
+const getJobCategories = async (req, res) => {
+    try {
+        const categories = await Job.distinct("category");
+        console.log(categories, "job cat");
+
+        res.status(200).json({ categories });
+    } catch (error) {
+        console.error("Error fetching job categories:", error);
+        res.status(500).json({ message: "Failed to fetch categories" });
+    }
+};
 module.exports = {
     createJob,
     getAllJobs,
@@ -341,5 +336,7 @@ module.exports = {
     creatApplication,
     getDashboard,
     getNotigication,
-    clearNotifications
+    clearNotifications,
+    getJobCategories,
+    getCompanyIndustry
 }
