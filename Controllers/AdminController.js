@@ -196,6 +196,7 @@ const updateCompany = async (req, res) => {
 const getApplications = async (req, res) => {
     try {
         const { search = "", jobId = "", page = 1, limit = 10 } = req.query;
+        // console.log(req.query, "q");
 
         let jobIds = [];
 
@@ -324,6 +325,20 @@ const getJobCategories = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch categories" });
     }
 };
+
+const updateApplicationStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    // console.log(req.params);
+    // console.log(req.body);
+
+    try {
+        const app = await Application.findByIdAndUpdate(id, { status }, { new: true });
+        res.json({ success: true, application: app });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
 module.exports = {
     createJob,
     getAllJobs,
@@ -338,5 +353,6 @@ module.exports = {
     getNotigication,
     clearNotifications,
     getJobCategories,
-    getCompanyIndustry
+    getCompanyIndustry,
+    updateApplicationStatus
 }

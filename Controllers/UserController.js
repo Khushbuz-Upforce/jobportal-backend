@@ -214,6 +214,17 @@ const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
         const { username, email, password, role } = req.body;
+        // Check for duplicate username
+        const existingUsername = await UserModel.findOne({ username, _id: { $ne: id } });
+        if (existingUsername) {
+            return res.status(400).json({ message: "Username already taken" });
+        }
+
+        // Check for duplicate email
+        const existingEmail = await UserModel.findOne({ email, _id: { $ne: id } });
+        if (existingEmail) {
+            return res.status(400).json({ message: "Email already in exist" });
+        }
 
         const updates = { username, email, role };
 
