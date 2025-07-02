@@ -3,6 +3,7 @@ const Application = require("../Models/ApplicationModel");
 const Company = require("../Models/CompanyModel");
 const UserModel = require("../Models/UserModel");
 const Notification = require('../Models/NotificationModel.js'); // ✅ Import Notification model
+
 const getNotigication = async (req, res) => {
     try {
         const notifications = await Notification.find().sort({ createdAt: -1 }).limit(50);
@@ -195,7 +196,7 @@ const updateCompany = async (req, res) => {
 
 const getApplications = async (req, res) => {
     try {
-        const { search = "", jobId = "", page = 1, limit = 10 } = req.query;
+        const { search = "", jobId = "" } = req.query;
         // console.log(req.query, "q");
 
         let jobIds = [];
@@ -217,14 +218,11 @@ const getApplications = async (req, res) => {
 
         const applications = await Application.find(query)
             .populate("jobId", "title location category") // optional: more job fields
-            .skip((page - 1) * limit)
-            .limit(parseInt(limit));
 
-        const total = await Application.countDocuments(query);
 
         res.status(200).json({
             applications,
-            totalPages: Math.ceil(total / limit),
+
         });
     } catch (err) {
         console.error(err);
@@ -306,9 +304,9 @@ const getDashboard = async (req, res) => {
 const getCompanyIndustry = async (req, res) => {
     try {
         const industry = await Company.distinct("industry");
-        console.log(industry, "job cat");
+        // console.log(industry, "company cat");
 
-        res.status(200).json({ industry });
+        return res.status(200).json({ industry });
     } catch (error) {
         console.error("Error fetching job categories:", error);
         res.status(500).json({ message: "Failed to fetch categories" });
@@ -317,7 +315,7 @@ const getCompanyIndustry = async (req, res) => {
 const getJobCategories = async (req, res) => {
     try {
         const categories = await Job.distinct("category");
-        console.log(categories, "job cat");
+        // console.log(categories, "job cat");
 
         res.status(200).json({ categories });
     } catch (error) {

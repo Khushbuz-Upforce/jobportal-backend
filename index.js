@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // CORS
 const corsOptions = {
     origin: ["http://localhost:5173", "https://jobportal-5f7t.vercel.app"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
 };
 app.use(cors(corsOptions));
@@ -41,7 +41,7 @@ app.use('/', require('./Routes/indexRoute'));
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173", "https://jobportal-5f7t.vercel.app"],
+        origin: ["http://localhost:5173"],
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         credentials: true,
     }

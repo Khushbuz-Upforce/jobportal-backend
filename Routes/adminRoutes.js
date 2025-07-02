@@ -104,7 +104,7 @@ router.delete('/clear', clearNotifications);
 // job catrgory
 
 router.get("/job-categories", getJobCategories); // ✅ Add this
-router.get("/job-industry", getCompanyIndustry); // ✅ Add this
+router.get("/company-industry", getCompanyIndustry); // ✅ Add this
 
 router.put("/updateStatus/:id/status", verifyToken, isAdmin, updateApplicationStatus);
 
