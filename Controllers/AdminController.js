@@ -106,7 +106,7 @@ const getAllJobs = async (req, res) => {
         const skip = (page - 1) * limit;
 
         const jobs = await Job.find(query)
-            .populate("companyId") // 🟢 Populate company details
+            .populate("companyId")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(parseInt(limit));
@@ -182,7 +182,7 @@ const getAllCompanies = async (req, res) => {
 const updateCompany = async (req, res) => {
     try {
         const updateData = req.body;
-        console.log(req.body, "Edit Company");
+        // console.log(req.body, "Edit Company");
 
         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
 

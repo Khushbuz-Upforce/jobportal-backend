@@ -104,15 +104,6 @@ const logout = (req, res) => {
         message: "User logged out successfully",
     });
 };
-// const getAllUsers = async (req, res) => {
-//     try {
-//         const users = await UserModel.find({}, "name email role"); // return selected fields
-//         return res.status(200).send(users);
-//     } catch (error) {
-//         console.error("Error fetching users:", error);
-//         return res.status(500).send({ message: "Server error" });
-//     }
-// };
 
 // Controller: Get all users with search, sorting, and pagination
 const getAllUsers = async (req, res) => {
@@ -185,7 +176,7 @@ const getAllUsers = async (req, res) => {
 const getUserProfile = async (req, res) => {
     try {
         const user = await UserModel.findById(req.user.id);
-        console.log(user, "users");
+        // console.log(user, "users");
 
         res.send(user);
     } catch (err) {
@@ -214,6 +205,8 @@ const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
         const { username, email, password, role } = req.body;
+        // console.log(req.body, "Update user");
+
         // Check for duplicate username
         const existingUsername = await UserModel.findOne({ username, _id: { $ne: id } });
         if (existingUsername) {
@@ -255,16 +248,13 @@ const deleteUser = async (req, res) => {
 };
 const updateUserProfile = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, role } = req.body;
         const userId = req.user.id;
+        // console.log(req.body, "Update profile");
 
-        const updates = { username, email };
 
-        // If password is provided, hash it
-        if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            updates.password = hashedPassword;
-        }
+        const updates = { username, email, role };
+
 
         const updatedUser = await UserModel.findByIdAndUpdate(userId, updates, { new: true });
 
